@@ -1,0 +1,87 @@
+N.B:- everywhere written user u have to put ur name
+    - everywhere there is bracket its comment and it shows what u hve to write, delete bracket and the the mentioned in brackets.
+
+Q1.
+-----
+#vim Q1.sh (here you can name it any name )Q
+then add the following script:
+#!/bin/bash
+for i in `seq 1 10`
+do
+useradd user$i
+echo -e "defaultpass\ndefaultpass" | passwd user$i
+chage -d 0 user$i
+chage -E 2021-07-14 user$i
+done
+:wq! (save and quit)
+#chmod 755 Q1.sh
+run to test if it works
+#./Q1.sh
+
+Q3.
+------
+#vim Q3.sh
+then add the following script:
+#!/bin/bash
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -7
+ps -o pid,user,%mem,%cpu,command | sort -k3 -r
+ps aux k-pcpu | head -2
+:wq! (save and quit)
+#chmod 755 Q3.sh
+run to test if it works
+#./Q3.sh
+
+Q4.
+------
+#vim Q4.shyyu
+then add the following script:
+#!/bin/bash
+dat=$(date)
+BACKUPTIME=`date +%b-%d-%y`
+for i in `seq 1 5`
+do
+echo "The backup of user$i is being made on $dat" >> /home/user$i/file$i.txt
+done
+zip backup-$BACKUPTIME.zip /home/*/*.txt
+scp backup-$BACKUPTIME.zip root@(client ip address):/root/Desktop/
+:wq! (save and quit)
+#chmod 755 Q4.sh
+run to test if it works
+#./Q4.sh
+
+Q5.
+------
+your machine must be connected to internet and your virtual machine being able to access the internet to (on NAT).
+
+#yum -y install mailx
+#vim /etc/mail.rc
+go at the bottom then add the following:
+set smtp=smtps://smtp.gmail.com:465
+set smtp-auth=login
+set smtp-auth-user=(your email address)
+set smtp-auth-password=(your email password)
+set ssl-verify=ignore
+set nss-config-dir=/etc/pki/nssdb/
+:wq!(save and quit)
+
+then go to ur physical pc and open your browser then paste the following link: https://myaccount.google.com/lesssecureapps then turn it on. then do the following to see if it worked
+
+#echo "Testing mail" | mail -v -S "Message" (your email).
+
+#vim Q5.sh
+then add the following script:
+#!/bin/bash
+echo "Dear user, please remember to do your assignement in order to develop muscles" | mail -v -S "Reminder" (your email)
+
+for i in `seq 1 5`
+do
+echo "Dear user, please remember to do your assignement in order to develop muscles" >> /home/user$i/file$i.txt
+done
+:wq! (save and quit)
+#chmod 755 Q5.sh
+#crontab -e
+add the following script:
+0 8 * * * /Q5.sh
+:wq!(save & quit)
+run to test if it works
+#./Q5.sh

@@ -1,0 +1,307 @@
+DISPLAYINF DATE CLANEDR AND OTHER OPERATION
+````````````````````````````````````````````````````````````
+#!/bin/bash
+while :
+do
+clear
+echo "-------------------"
+echo "Main menu"
+echo "-------------------"
+echo "[1]Show todays date/time"
+echo "[2]Show files in the current dir & count them out"
+echo "[3]Show this months calendar"
+echo "[4] Show my system uptime"
+echo "[5] exit/stop"
+echo "********************************"
+echo -n "Enter your menu choice[1-5]:"
+read yourch
+case $yourch in
+1)echo "Today is `date`,press a key...";read;;
+2)echo "Files in `pwd`, are: `ls -l | wc -l`";echo "Press a key...";read;;
+3)echo "This months calendar is displayed:`cal` ";echo "Press a key...";read;;
+4)echo "My system uptime is: `uptime`";echo "Press a key...";read;;
+5)exit 0;;
+*)echo "Byanze! Please select choice 1,2,3,4 or 5";
+echo "Press a key...";read;;
+esac
+done
+
+`````````````````````````````````````````````````````````````````
+#!/bin/bash
+if [ "$(ls -A .)" ]; then
+      echo "Directory is not empty."
+else
+      echo "Directory is empty. Creating files..."
+      touch file1.txt file2.txt
+fi
+echo "List of files and permissions:"
+ls -l
+num_files=$(ls -1 | wc -l)
+echo "Number of files in the current directory: $num_files"
+zip -r myfiles.zip *
+remote_user="remote_username"
+remote_host="remote_hostname"
+remote_path="/path/to/remote/directory"
+scp myfiles.zip ${remote_user}@${remote_host}:${remote_path}
+###############################
+# Step 6: Schedule the script to run every one minute using a cron job.
+# To create a cron job, run the following command:
+# crontab -e
+# Then add the following line to the file:
+# * * * * * /path/to/script.sh
+# This will run the script every minute.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+EXAMEN JEREMIE CORRECTED
+========================
+1.checking number of files
+--------------------------
+#!/bin/bash
+ls -al .
+count=$ ( ls -al .| wc -l)
+final =$( expr $ (count)-1)
+if [ $final-eq0 ];then
+for i in `seq 1 10`
+do
+touch file$i
+done
+fi
+echo "you have $final files here "
+zip myFiles.zip *
+scp myFiles.zip root@192.168.10.3.Backup.zip
+echo "script executed successfully"
+
+2.extracting files located in /etc/passwd and display all files where we have root user
+---------------------------------------------------------------------------------------
+#!/bin/bash
+echo"Displaying files for user root"
+grep root /etc/passwd
+echo "done with "
+
+3.ask your name and birth date and tell your name an your age
+-------------------------------------------------------------
+#!/bin/bash
+currentYear=`date +%Y`
+echo "Please provide your name"
+read name
+echo "please provide birthdate"
+read birthdate
+let age=$(( $currentYear-$birthdate))
+echo "Dear $name your age is $age"
+
+4.copy a file from remote desktop and copy on your local desktop
+----------------------------------------------------------------
+#!/bin/bash
+scp root@ip add of client:$HOME/sendFile     /scripts
+echo "done getting file"
+
+ANOTHER DEAL USED
+=================
+
+q1.
+-----------------------------
+#! /bin/bash
+count =`ls -l ./ | wc -l`
+name=`date +%M`
+if [ $count -eq 0 ]; then
+touch file{1-5}
+totalfiles=`ls -l ./ | wc -l`
+echo $totalfiles
+tar -acf ./zipped$name.zip ./*
+scp ./zipped$name.zip root@75.75.75.2:/root/Desktop/remote
+else
+totalfiles=`ls -l ./ | wc -l`
+echo $totalfiles
+tar -acf ./zipped$name.zip ./*
+scp ./zipped$name.zip root@75.75.75.2:/root/Desktop/remote
+fi
+
+q2. 
+-----------------------------------
+#! /bin/bash
+cat /etc/passwd | grep root
+------------------------------------
+q3. 
+#! /bin/bash
+echo "enter name:"
+read name
+enter "birth year"
+read year
+currentyr=`date +%G`
+calc=`expr $currentyr - $year`
+echo "your name is $name"
+echo "your age is $calc"
+----------------------------------------------------
+q4. 
+#! /bin/bash
+scp root@75.75.75.2:/root/Desktop/file /root/Desktop/
+------------------------------------------------------
+
+SCRIPT OF EXAM PATOS QSTN2 WRITTING COMMAND
+===========================================
+#!/bin/bash
+echo " redirecting /etc/passwd to mywork.txt"
+cat /etc/passwd > mywork.txt
+echo " counting lines of mywork.txt "
+wc -l mywork.txt
+echo " Displaying user root only"
+grep " ^root" mywork.txt
+echo " Displaying &counting users with /nologin at the end "
+grep " /nologin$" mywork.txt
+grep -c "/nologin$" mywork.txt
+echo "Numbering lines&directing to a filenamed numbered lines
+grep -n mywork.txt > numberedlines.txt
+cat numberedlines.txt
+-----------------------------------------------------------
+script 1 to add users
+==============
+#vim useraddscripts.sh 
+when the file opens type
+#!/bin/bash 
+for i in Munana{1..10} 
+do
+useradd $i;
+passwd -d $i;
+echo $i | passwd  --stdin;
+chage -E 2021-07-18 $i;
+chage -d 0 $i;
+done
+save by pressing esc and type :wq!
+#chmod 755 useraddscripts.sh
+#./useraddscripts.sh (aka kaniga nako ku running ngo urebe ko byakoze )
+
+script 2 to checkspace remaining and then send email reminder and sms
+=================================================
+step 1: make sure that you email have 2 verification steps this is done in email settings 
+
+step 2: go to you normal pc and go to google and type the following link
+https://myaccount.google.com › apppasswords
+
+step 3: login to your account and generete new password  keep the password well kuko nizo uzakoresha muri mailx aho basaba password
+now go back to virtual linux machine terminal
+#vim /etc/mail.rc
+when file opens go at the end of file and add the following
+set smtp=smtps://smtp.gmail.com:465
+set smtp-auth=login
+set smtp-auth-user=emaillinux0@gmail.com (n.b aha ukoresha email yawe)
+set smtp-auth-password:ceufemcqvmfseeuv (n.b aha ukoresha password yawe yabaye genereted by app password)
+set ssl-verify=ignore
+set nss-config-dir=/etc/pki/nssdb/
+save by pressing esc and type :wq!
+now start writing you script
+#vim diskusage.sh
+when file opens type
+#!/bin/bash 
+
+
+Script 3 showing process that is consuminig space
+===================================
+#vim processconsume.sh
+when file opens then type 
+#!/bin/bash
+ps -eo pid,cmd,%mem,%cpu --sort=-%cpu | head -8
+save by pressing esc and type :wq!
+#chmod 755 processconsume.sh
+#bash processconsume.sh (aka nako kkureba ko kakoze)
+
+
+
+Script 4 to do daily backup
+===================
+here you need need another vm pc in which you will do backp to (2pc should be pinging)
+#vim 
+#vim backup.sh
+when file opens type the following (aho uzasanga izina ryanjye washyiraho ibyo ushaka nawe)
+
+#!/bin/bash
+dat=$(date)
+BACKUPTIME=`date +%b-%d-%y`
+for i in in Munana{1..5};
+do
+echo "backup for $i being made on $dat" >> /home/$i/file.txt
+done
+zip Blessing-$BACKUPTIME.zip /home/*/*.txt
+scp Blessing-$BACKUPTIME.zip root@(client ip address aho ushaka gukorera backup):/root/Desktop/
+save by pressing esc and type :wq!
+#chmod 755 backup.sh
+#./backup.sh (to run and see if its working)
+
+
+script 5 Reminding Email 
+
+now its done for more info  Blessingmtrading ltd we buy and sell computers  call us on : 0784332354
+
+#############################################################
+
+CREATE 5 USERS AND CHANGE PASSWORD ATFIRST LOGIN
+#!/bin/bash
+for i in `seq 1 5`
+do 
+userdel friend$i
+done
+
+for i in `seq 1 5`
+do 
+return
+echo "user add friend$i"
+useradd friend$i
+chage -d 0 friend$i
+done
+
+###################################################################
+
+DISPLAY USER ROOT PASSWORD ONLY
+
+#!/bin/bash
+echo " redirecting /etc/passwd to mywork.txt"
+cat /etc/passwd > mywork.txt
+echo " counting lines of mywork.txt "
+wc -l mywork.txt
+echo " Displaying user root only"
+grep " ^root" mywork.txt
+echo " Displaying &counting users with /nologin at the end "
+grep " /nologin$" mywork.txt
+grep -c "/nologin$" mywork.txt
+echo "Numbering lines&directing to a filenamed numbered lines
+grep -n mywork.txt > numberedlines.txt
+cat numberedlines.txt
+
+#######################################################
+from bing chart
+
+
+#!/bin/bash
+
+# List down files in /root
+files=$(ls /root)
+
+# Count the number of files
+num_files=$(echo "$files" | wc -l)
+
+# If files are less than 20, create zero kb files to make it 20 files
+if [ $num_files -lt 20 ]
+then
+    for i in $(seq 1 $((20-$num_files)))
+    do
+        touch /root/file$i
+    done
+    echo "Created $(($num_files + $i - 1)) files in /root"
+else
+    echo "Found $num_files files in /root:"
+    echo "$files"
+fi
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+write a script that will zip all 0 kb files. 
+send them to a remote machine and change their 
+name upon being received on the remote end.
+#!/bin/bash
+
+# Zip all 0 kb files
+find . -type f -size 0 -exec gzip "{}" \;
+
+# Send the files to a remote machine
+scp *.gz user@remote:/path/to/destination
+
+# Change the name of the files upon being received on the remote end
+ssh user@remote 'cd /path/to/destination && for file in *.gz; do mv "$file" "${file%.gz}-renamed.gz"; done'
